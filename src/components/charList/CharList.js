@@ -2,6 +2,7 @@ import {Component} from 'react';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import MarvelService from '../../services/MarvelService';
+import PropTypes from 'prop-types'
 import './charList.scss';
 
 class CharList extends Component {
@@ -55,7 +56,6 @@ class CharList extends Component {
     }
 
     renderItems (arr) {
-        {
             const items =  arr.map((item) => {
                 let imgStyle = {'objectFit' : 'cover'};
                 if (item.thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
@@ -78,7 +78,6 @@ class CharList extends Component {
                     {items}
                 </ul>
             )
-        }
     }
 
     render () {
@@ -104,5 +103,8 @@ class CharList extends Component {
             </div>
         )
     }
+}
+CharList.propTypes = {
+    onCharSelected: PropTypes.func.isRequired
 }
 export default CharList;
