@@ -7,7 +7,7 @@ class MarvelService {
         let res = await fetch(url);
     
         if(!res.ok) {
-            throw new Error (`Could not fetch ${url}, status ${res.status}`);
+            throw new Error (`Could not fetch ${url}, status ${res.status} with reason `);
        }
     
         return await res.json();
