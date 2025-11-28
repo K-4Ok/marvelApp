@@ -13,7 +13,7 @@ class CharList extends Component {
         loading: true, //относится к первичной загруске
         error: false,
         newItemLoading: false, //относится к загруске новых эл-ов
-        offset: 210,
+        offset: 0,
         charEnded: false
     }
 

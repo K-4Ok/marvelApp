@@ -21,7 +21,7 @@ class CharInfo extends Component {
         // null на id какого - либо персонажа
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate(prevProps) {
         if (this.props.charId !== prevProps.charId) {
             this.updateChar();
         }

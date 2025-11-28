@@ -19,6 +19,7 @@ class App extends Component {
     }
 
     render () {
+        const selectedChar = this.state.selectedChar;
         return (
             <div className="app">
                 <AppHeader/>
@@ -27,7 +28,7 @@ class App extends Component {
                     <div className="char__content">
                         <CharList onCharSelected={this.onCharSelected}/>
                         <ErrorBoundary>
-                            <CharInfo charId={this.state.selectedChar}/>
+                            <CharInfo charId={selectedChar ? selectedChar : Math.floor(Math.random()*(20-1)+1)}/>
                         </ErrorBoundary>
                     </div>
                     <img className="bg-decoration" src={decoration} alt="vision"/>
