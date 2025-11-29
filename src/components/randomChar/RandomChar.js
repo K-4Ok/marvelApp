@@ -1,63 +1,55 @@
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage'
 import MarvelService from "../../services/MarvelService";
 import './randomChar.scss';
 import mjolnir from '../../resources/img/mjolnir.png';
 
-class RandomChar extends Component {
-    state = {
-        char: {},
-        loading: true,
-        error: false
+const RandomChar = () => {
+    
+    const [char, setChar] = useState({});
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
+
+    const marvelService = new MarvelService();
+
+    useEffect (()=>{
+        updateChar();
+    }, []);
+
+    const onCharLoaded = (char) => {
+        setChar(char);
+        setLoading(false);
     }
 
-    marvelService = new MarvelService();
-
-    componentDidMount() {
-        this.updateChar();
-        // this.timerId = setInterval(this.updateChar, 3000);
+    const onCharLoading = () => {
+        setLoading(true);
     }
 
-    componentWillUnmount(){
-        // clearInterval(this.timerId);
+    const onError = () => {
+        setLoading(false);
+        setError(true);
     }
 
-    onCharLoaded = (char) => {
-        this.setState({char, loading: false}) // аналог char: char, в данном случае вместо второго
-        // char будет подставлен объект вернувшийся из then строки 25
-    }
-
-    onCharLoading = () => {
-        this.setState({
-            loading: true
-        })
-    }
-
-    onError = () => {
-        this.setState({ loading: false, error: true})
-    }
-
-    updateChar = () => {
+    const updateChar = () => {
         const id = Math.floor(Math.random()*(20 - 1) + 1);
-        this.onCharLoading();
-        this.marvelService.getCharacter(id)
-        .then(this.onCharLoaded)
-        .catch(this.onError) 
+        onCharLoading();
+        marvelService.getCharacter(id)
+        .then(onCharLoaded)
+        .catch(onError); 
         // когда используется цепочка с then и в 
         // её скобках идёт просто ссылка на функцию, то аргумент который придёт
         // в then автоматически будет подставлен в функцию в скобках, в данном
         // случае он придёт в char (строка 17), в данном случае объект
     }
 
-
-    render () {
-        const {char, loading, error} = this.state;
-        const onRender = () =>{
+        const onRender = () => {
             return error ? <ErrorMessage/> : (loading ? <Spinner/> : <View char={char}/>)
+            // тут идёт проброска объекта char который придёт с сервера из компонента 
+            // RandomChar в компонент View как props
         }
 
-        return (
+        return ( // статичная часть блока, та что спарва
             <div className="randomchar">
                 {onRender()}
                 <div className="randomchar__static">
@@ -69,18 +61,18 @@ class RandomChar extends Component {
                         Or choose another one
                     </p>
                     <button className="button button__main"
-                    onClick={this.updateChar}>
+                    onClick={updateChar}>
                         <div className="inner">try it</div>
                     </button>
                     <img src={mjolnir} alt="mjolnir" className="randomchar__decoration"/>
                 </div>
             </div>
         )
-    }
 }
 
-const View = ({char}) => {
-    const {name, description, thumbnail, wiki, homepage} = char;
+// динамическая часть блока, та что слева:
+const View = ({char}) => { // тут {char} означает передачу в props компонента ОБЪЕКТ char.
+    const {name, description, thumbnail, wiki, homepage} = char; // деструктуризация объекта char
     let imgStyle = {'objectFit':'cover'};
     if (thumbnail ==='http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
         imgStyle = {'objectFit' : 'contain'};
